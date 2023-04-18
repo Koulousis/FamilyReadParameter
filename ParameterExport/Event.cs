@@ -21,6 +21,8 @@ namespace ParameterExport
 
 		public void Execute(UIApplication app)
 		{
+			AddinForm addinForm = new AddinForm();
+			addinForm.Show();
 		    Document doc = app.Application.NewProjectDocument(UnitSystem.Metric);
 
 		    // Let the user select multiple family files
