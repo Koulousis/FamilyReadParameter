@@ -63,6 +63,16 @@ namespace ParameterExport.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap ParameterGroupExample {
+            get {
+                object obj = ResourceManager.GetObject("ParameterGroupExample", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap petpanel {
             get {
                 object obj = ResourceManager.GetObject("petpanel", resourceCulture);

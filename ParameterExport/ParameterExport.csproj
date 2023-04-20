@@ -78,6 +78,9 @@
   <ItemGroup>
     <None Include="Resources\petpanel.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ParameterGroupExample.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if exist "J:\Drawings REVIT FAMILIES\02 NEW\Aris\Addins\PetersimeV2\DLLs" copy "$(ProjectDir)$(OutputPath)$(TargetFileName)" "J:\Drawings REVIT FAMILIES\02 NEW\Aris\Addins\PetersimeV2\DLLs"</PostBuildEvent>

@@ -49,17 +49,11 @@ namespace ParameterExport
 			}
 		}
 
-		private void readParamsBtn_Click(object sender, EventArgs e)
+		private void selectedFamiliesList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
 		{
+			// Check if there is at least one item selected
 			if (selectedFamiliesList.SelectedItems.Count == 0)
 			{
-				MessageBox.Show("No family selected.");
-				return;
-			}
-
-			if (paramGroupDropDown.SelectedItem == null)
-			{
-				MessageBox.Show("No parameter group selected.");
 				return;
 			}
 
@@ -98,7 +92,7 @@ namespace ParameterExport
 				paramGroupDropDown.Items.Add(group.ToString().Replace("PG_",String.Empty));
 			}
 
-			paramGroupDropDown.SelectedIndex = 0;
+			paramGroupDropDown.SelectedIndex = 53;
 		}
 
 		private void UpdateParamGridView()
@@ -129,9 +123,7 @@ namespace ParameterExport
 				paramGridView.Rows.Add(row);
 			}
 		}
-
-
-
+		
 		private void AddGroupHeader(DataGridView dataGridView, string headerText)
 		{
 			DataGridViewRow groupHeaderRow = new DataGridViewRow();
@@ -148,22 +140,5 @@ namespace ParameterExport
 			dataGridView.Rows.Add(groupHeaderRow);
 		}
 		#endregion
-
-		private void selectedFamiliesList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-		{
-			// Check if there is at least one item selected
-			if (selectedFamiliesList.SelectedItems.Count == 0)
-			{
-				return;
-			}
-
-			string selectedFamilyName = selectedFamiliesList.SelectedItems[0].Text;
-			string selectedFamilyPath = _familyFilePaths.Find(path => path.Contains(selectedFamilyName));
-			
-			_eventHandler.SelectedFamilyPath = selectedFamilyPath;
-			_eventHandler.SelectedParameterGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), $"PG_{paramGroupDropDown.SelectedItem}");
-
-			Command._externalEvent.Raise();
-		}
 	}
 }
