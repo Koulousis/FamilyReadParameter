@@ -10,7 +10,7 @@ using Autodesk.Revit.UI;
 using System.IO;
 using System.Windows.Forms;
 
-namespace ParameterExport
+namespace FamilyReadParameter
 {
 	public class Event : IExternalEventHandler
 	{

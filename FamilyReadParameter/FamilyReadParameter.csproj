@@ -7,8 +7,8 @@
     <ProjectGuid>{A8BB9D68-7A8F-4548-88DA-BB56B7B92FA9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ParameterExport</RootNamespace>
-    <AssemblyName>ParameterExport</AssemblyName>
+    <RootNamespace>FamilyReadParameter</RootNamespace>
+    <AssemblyName>FamilyReadParameter</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>

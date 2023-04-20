@@ -13,7 +13,7 @@ using Autodesk.Revit.UI;
 using Color = System.Drawing.Color;
 using Form = System.Windows.Forms.Form;
 
-namespace ParameterExport
+namespace FamilyReadParameter
 {
 	public partial class AddinForm : Form
 	{

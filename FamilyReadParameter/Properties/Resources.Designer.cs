@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ParameterExport.Properties {
+namespace FamilyReadParameter.Properties {
     using System;
     
     

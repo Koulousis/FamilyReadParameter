@@ -11,7 +11,7 @@ using Autodesk.Revit.DB;
 using Autodesk.Revit.DB.Electrical;
 using Autodesk.Revit.UI;
 
-namespace ParameterExport
+namespace FamilyReadParameter
 {
 	[Transaction(TransactionMode.ReadOnly)]
 	public class Command : IExternalCommand

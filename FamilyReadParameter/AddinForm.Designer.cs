@@ -1,6 +1,6 @@
 ﻿using Autodesk.Revit.DB;
 
-namespace ParameterExport
+namespace FamilyReadParameter
 {
 	partial class AddinForm
 	{
@@ -210,7 +210,7 @@ namespace ParameterExport
 			// pictureBox1
 			// 
 			this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pictureBox1.Image = global::ParameterExport.Properties.Resources.petpanel;
+			this.pictureBox1.Image = global::FamilyReadParameter.Properties.Resources.petpanel;
 			this.pictureBox1.Location = new System.Drawing.Point(0, 0);
 			this.pictureBox1.Name = "pictureBox1";
 			this.pictureBox1.Size = new System.Drawing.Size(908, 56);
@@ -221,7 +221,7 @@ namespace ParameterExport
 			// pictureBox2
 			// 
 			this.pictureBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.pictureBox2.Image = global::ParameterExport.Properties.Resources.ParameterGroupExample;
+			this.pictureBox2.Image = global::FamilyReadParameter.Properties.Resources.ParameterGroupExample;
 			this.pictureBox2.Location = new System.Drawing.Point(603, 16);
 			this.pictureBox2.Name = "pictureBox2";
 			this.pictureBox2.Size = new System.Drawing.Size(285, 70);
