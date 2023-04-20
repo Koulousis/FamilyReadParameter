@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Autodesk.Revit.DB;
+using Autodesk.Revit.UI;
+using Color = System.Drawing.Color;
 using Form = System.Windows.Forms.Form;
 
 namespace ParameterExport
@@ -15,30 +18,62 @@ namespace ParameterExport
 	public partial class AddinForm : Form
 	{
 		// Let the user select multiple family files
-		private List<string> familyFilePaths = new List<string>();
-		private List<string> familyNameFromPaths = new List<string>();
+		private List<string> _familyFilePaths = new List<string>();
+		private List<string> _familyNamesFromPaths = new List<string>();
+		private Array parameterGroups = Enum.GetValues(typeof(BuiltInParameterGroup));
+		private Event _eventHandler;
 
-		public AddinForm()
+		public AddinForm(UIApplication app, Event eventHandler)
 		{
 			InitializeComponent();
-			AddRevitParamGroups();
+			FillComboBoxWithParamGroups();
+			_eventHandler = eventHandler;
+			Command._handler.OnEventHandlerCompleted += UpdateParamGridView;
 		}
 
+		#region Events
 		private void selectFamiliesBtn_Click(object sender, EventArgs e)
 		{
-			familyFilePaths = SelectFamilyFiles();
-			familyNameFromPaths.Clear();
+			_familyFilePaths = SelectFamilyFiles();
+			if (_familyFilePaths.Count == 0 || _familyFilePaths == null) return;
+
+			_familyNamesFromPaths.Clear();
 			selectedFamiliesList.Items.Clear();
 
-			foreach (string familyFilePath in familyFilePaths)
+			foreach (string familyFilePath in _familyFilePaths)
 			{
 				string familyNameFromPath = familyFilePath.Substring(familyFilePath.LastIndexOf('\\') + 1);
 				familyNameFromPath = familyNameFromPath.Substring(0, familyNameFromPath.Length - 4);
-				familyNameFromPaths.Add(familyNameFromPath);
+				_familyNamesFromPaths.Add(familyNameFromPath);
 				selectedFamiliesList.Items.Add(familyNameFromPath);
 			}
 		}
 
+		private void readParamsBtn_Click(object sender, EventArgs e)
+		{
+			if (selectedFamiliesList.SelectedItems.Count == 0)
+			{
+				MessageBox.Show("No family selected.");
+				return;
+			}
+
+			if (paramGroupDropDown.SelectedItem == null)
+			{
+				MessageBox.Show("No parameter group selected.");
+				return;
+			}
+
+			string selectedFamilyName = selectedFamiliesList.SelectedItems[0].Text;
+			string selectedFamilyPath = _familyFilePaths.Find(path => path.Contains(selectedFamilyName));
+			
+			_eventHandler.SelectedFamilyPath = selectedFamilyPath;
+			_eventHandler.SelectedParameterGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), $"PG_{paramGroupDropDown.SelectedItem}");
+
+			Command._externalEvent.Raise();
+		}
+		#endregion
+
+		#region Methods
 		public List<string> SelectFamilyFiles()
 		{
 			OpenFileDialog openFileDialog = new OpenFileDialog
@@ -56,11 +91,79 @@ namespace ParameterExport
 			return null;
 		}
 
-		public void AddRevitParamGroups()
+		public void FillComboBoxWithParamGroups()
 		{
-			parametersGroupList.Items.Add(BuiltInParameterGroup.PG_ELECTRICAL_ENGINEERING.ToString());
-			parametersGroupList.Items.Add(BuiltInParameterGroup.PG_TEXT.ToString());
-			parametersGroupList.Items.Add(BuiltInParameterGroup.PG_IDENTITY_DATA.ToString());
+			foreach (BuiltInParameterGroup group in parameterGroups)
+			{
+				paramGroupDropDown.Items.Add(group.ToString().Replace("PG_",String.Empty));
+			}
+
+			paramGroupDropDown.SelectedIndex = 0;
+		}
+
+		private void UpdateParamGridView()
+		{
+			paramGridView.Rows.Clear();
+
+			if (_eventHandler.Parameters.Count == 0)
+			{
+				return;
+			}
+
+			string currentGroupName = string.Empty;
+			foreach (var param in _eventHandler.Parameters.OrderBy(x => x.Item1))
+			{
+				string groupName = param.Item1.ToString();
+
+				if (currentGroupName != groupName)
+				{
+					AddGroupHeader(paramGridView, groupName);
+					currentGroupName = groupName;
+				}
+
+				DataGridViewRow row = new DataGridViewRow();
+				// Remove the first column cell and adjust the cell indexes.
+				row.Cells.Add(new DataGridViewTextBoxCell { Value = param.Item2 });
+				row.Cells.Add(new DataGridViewTextBoxCell { Value = param.Item3 });
+
+				paramGridView.Rows.Add(row);
+			}
+		}
+
+
+
+		private void AddGroupHeader(DataGridView dataGridView, string headerText)
+		{
+			DataGridViewRow groupHeaderRow = new DataGridViewRow();
+			groupHeaderRow.Height = 20;
+			groupHeaderRow.DefaultCellStyle.BackColor = Color.PaleGreen;
+			groupHeaderRow.DefaultCellStyle.Font = new Font(dataGridView.Font, FontStyle.Bold);
+
+			DataGridViewTextBoxCell headerCell = new DataGridViewTextBoxCell();
+			headerCell.Value = headerText;
+			headerCell.Style.Alignment = DataGridViewContentAlignment.MiddleLeft;
+			headerCell.Style.BackColor = Color.PaleGreen;
+
+			groupHeaderRow.Cells.Add(headerCell);
+			dataGridView.Rows.Add(groupHeaderRow);
+		}
+		#endregion
+
+		private void selectedFamiliesList_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+		{
+			// Check if there is at least one item selected
+			if (selectedFamiliesList.SelectedItems.Count == 0)
+			{
+				return;
+			}
+
+			string selectedFamilyName = selectedFamiliesList.SelectedItems[0].Text;
+			string selectedFamilyPath = _familyFilePaths.Find(path => path.Contains(selectedFamilyName));
+			
+			_eventHandler.SelectedFamilyPath = selectedFamilyPath;
+			_eventHandler.SelectedParameterGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), $"PG_{paramGroupDropDown.SelectedItem}");
+
+			Command._externalEvent.Raise();
 		}
 	}
 }
