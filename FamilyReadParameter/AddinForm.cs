@@ -22,11 +22,13 @@ namespace FamilyReadParameter
 		private List<string> _familyNamesFromPaths = new List<string>();
 		private Array parameterGroups = Enum.GetValues(typeof(BuiltInParameterGroup));
 		private Event _eventHandler;
+		private UIApplication _app;
 
 		public AddinForm(UIApplication app, Event eventHandler)
 		{
 			InitializeComponent();
 			FillComboBoxWithParamGroups();
+			_app = app;
 			_eventHandler = eventHandler;
 			Command._handler.OnEventHandlerCompleted += UpdateParamGridView;
 		}
@@ -63,7 +65,23 @@ namespace FamilyReadParameter
 			_eventHandler.SelectedFamilyPath = selectedFamilyPath;
 			_eventHandler.SelectedParameterGroup = (BuiltInParameterGroup)Enum.Parse(typeof(BuiltInParameterGroup), $"PG_{paramGroupDropDown.SelectedItem}");
 
+			selectedFamilyTextBox.Text = selectedFamilyName;
 			Command._externalEvent.Raise();
+		}
+
+		private void openInRevitBtn_Click(object sender, EventArgs e)
+		{
+			if (selectedFamiliesList.SelectedItems.Count == 0)
+			{
+				MessageBox.Show("Please select a family file first.");
+				return;
+			}
+
+			string selectedFamilyName = selectedFamiliesList.SelectedItems[0].Text;
+			string selectedFamilyPath = _familyFilePaths.Find(path => path.Contains(selectedFamilyName));
+
+			// Open the selected family file in the current Revit instance.
+			OpenFamilyInCurrentRevitInstance(selectedFamilyPath);
 		}
 		#endregion
 
@@ -139,6 +157,21 @@ namespace FamilyReadParameter
 			groupHeaderRow.Cells.Add(headerCell);
 			dataGridView.Rows.Add(groupHeaderRow);
 		}
+
+		public void OpenFamilyInCurrentRevitInstance(string familyPath)
+		{
+			if (selectedFamiliesList.SelectedItems.Count == 0)
+			{
+				MessageBox.Show("Please select a family file first.");
+				return;
+			}
+
+			// Open the selected family file in the current Revit instance.
+			_eventHandler.SelectedFamilyPath = familyPath;
+			_eventHandler.OpenFamilyInEditor = true;
+			Command._externalEvent.Raise();
+		}
+
 		#endregion
 	}
 }

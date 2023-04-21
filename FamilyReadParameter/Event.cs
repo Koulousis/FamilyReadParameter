@@ -19,6 +19,7 @@ namespace FamilyReadParameter
 		public List<Tuple<string, string, string>> Parameters { get; private set; } = new List<Tuple<string, string, string>>();
 		public delegate void EventHandlerCallback();
 		public event EventHandlerCallback OnEventHandlerCompleted;
+		public bool OpenFamilyInEditor { get; set; } = false;
 
 
 		public string GetName()
@@ -28,52 +29,79 @@ namespace FamilyReadParameter
 
 		public void Execute(UIApplication app)
 		{
-			Document doc = app.Application.NewProjectDocument(UnitSystem.Metric);
-
-			// Clear the Parameters list before processing a new family.
-			Parameters.Clear();
-
-			using (Transaction trans = new Transaction(doc, "Load Family and Read Parameters"))
+			if (OpenFamilyInEditor)
 			{
-				trans.Start();
-				if (doc.LoadFamily(SelectedFamilyPath, out var family))
+				OpenFamilyInEditor = false;
+				// Convert the file path to a ModelPath object
+				ModelPath modelPath = ModelPathUtils.ConvertUserVisiblePathToModelPath(SelectedFamilyPath);
+
+				// Create an OpenOptions object to control how the file is opened
+				OpenOptions openOptions = new OpenOptions();
+				openOptions.Audit = false; // Change to true if you want to perform an audit while opening the document
+
+				// Open and activate the family file as a separate document
+				UIDocument familyUIDoc = null;
+				try
 				{
-					FilteredElementCollector collector = new FilteredElementCollector(doc);
-					ICollection<Element> familyTypes = collector.OfClass(typeof(FamilySymbol))
-						.OfCategoryId(family.FamilyCategoryId)
-						.ToElements();
+					familyUIDoc = app.OpenAndActivateDocument(modelPath, openOptions, false);
+				}
+				catch (Exception ex)
+				{
+					TaskDialog.Show("Error", "Failed to open and activate the family.\n" + ex.Message);
+				}
 
-					string selectedFamilyName = Path.GetFileNameWithoutExtension(SelectedFamilyPath);
+				TaskDialog.Show("Success", "Family opened and activated successfully: " + familyUIDoc.Document.Title);
 
-					foreach (FamilySymbol familyType in familyTypes)
+			}
+			else
+			{
+				Document doc = app.Application.NewProjectDocument(UnitSystem.Metric);
+
+				// Clear the Parameters list before processing a new family.
+				Parameters.Clear();
+
+				using (Transaction trans = new Transaction(doc, "Load Family and Read Parameters"))
+				{
+					trans.Start();
+					if (doc.LoadFamily(SelectedFamilyPath, out var family))
 					{
-						if (familyType.FamilyName != selectedFamilyName)
-						{
-							continue;
-						}
+						FilteredElementCollector collector = new FilteredElementCollector(doc);
+						ICollection<Element> familyTypes = collector.OfClass(typeof(FamilySymbol))
+							.OfCategoryId(family.FamilyCategoryId)
+							.ToElements();
 
-						ParameterSet parameters = familyType.Parameters;
-						foreach (Parameter param in parameters)
+						string selectedFamilyName = Path.GetFileNameWithoutExtension(SelectedFamilyPath);
+
+						foreach (FamilySymbol familyType in familyTypes)
 						{
-							if (param.Definition.ParameterGroup == SelectedParameterGroup)
+							if (familyType.FamilyName != selectedFamilyName)
 							{
-								string paramName = param.Definition.Name;
-								string paramValue = param.AsValueString();
+								continue;
+							}
 
-								Parameters.Add(new Tuple<string, string, string>(familyType.Name, paramName, paramValue));
+							ParameterSet parameters = familyType.Parameters;
+							foreach (Parameter param in parameters)
+							{
+								if (param.Definition.ParameterGroup == SelectedParameterGroup)
+								{
+									string paramName = param.Definition.Name;
+									string paramValue = param.AsValueString();
+
+									Parameters.Add(new Tuple<string, string, string>(familyType.Name, paramName, paramValue));
+								}
 							}
 						}
+
+						trans.Commit();
+					}
+					else
+					{
+						trans.RollBack();
 					}
 
-					trans.Commit();
+					// Invoke the event when the event handler is completed
+					OnEventHandlerCompleted?.Invoke();
 				}
-				else
-				{
-					trans.RollBack();
-				}
-
-				// Invoke the event when the event handler is completed
-				OnEventHandlerCompleted?.Invoke();
 			}
 		}
 	}
