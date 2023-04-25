@@ -32,6 +32,7 @@ namespace FamilyReadParameter
 		{
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddinForm));
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.infoGroupBox = new System.Windows.Forms.GroupBox();
@@ -46,6 +47,8 @@ namespace FamilyReadParameter
 			this.listViewLabel = new System.Windows.Forms.Label();
 			this.gridViewLabel = new System.Windows.Forms.Label();
 			this.paramGridView = new System.Windows.Forms.DataGridView();
+			this.paramName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.paramValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.paramGroupDropDown = new System.Windows.Forms.ComboBox();
 			this.selectionGroupBox = new System.Windows.Forms.GroupBox();
 			this.openInRevitBtn = new System.Windows.Forms.Button();
@@ -55,8 +58,6 @@ namespace FamilyReadParameter
 			this.panel2 = new System.Windows.Forms.Panel();
 			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.pictureBox1 = new System.Windows.Forms.PictureBox();
-			this.paramName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.paramValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.panel1.SuspendLayout();
 			this.infoGroupBox.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
@@ -224,6 +225,14 @@ namespace FamilyReadParameter
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.paramGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+			dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+			dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.paramGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
 			this.paramGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
 			this.paramGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.paramName,
@@ -233,6 +242,26 @@ namespace FamilyReadParameter
 			this.paramGridView.ReadOnly = true;
 			this.paramGridView.Size = new System.Drawing.Size(476, 315);
 			this.paramGridView.TabIndex = 4;
+			// 
+			// paramName
+			// 
+			this.paramName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.paramName.DefaultCellStyle = dataGridViewCellStyle2;
+			this.paramName.HeaderText = "Parameter Name";
+			this.paramName.Name = "paramName";
+			this.paramName.ReadOnly = true;
+			this.paramName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+			// 
+			// paramValue
+			// 
+			this.paramValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+			dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.paramValue.DefaultCellStyle = dataGridViewCellStyle3;
+			this.paramValue.HeaderText = "Parameter Value";
+			this.paramValue.Name = "paramValue";
+			this.paramValue.ReadOnly = true;
+			this.paramValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
 			// 
 			// paramGroupDropDown
 			// 
@@ -266,7 +295,7 @@ namespace FamilyReadParameter
 			// 
 			this.openInRevitBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.openInRevitBtn.Image = global::FamilyReadParameter.Properties.Resources.openInRevit;
-			this.openInRevitBtn.Location = new System.Drawing.Point(116, 49);
+			this.openInRevitBtn.Location = new System.Drawing.Point(116, 51);
 			this.openInRevitBtn.Name = "openInRevitBtn";
 			this.openInRevitBtn.Size = new System.Drawing.Size(50, 50);
 			this.openInRevitBtn.TabIndex = 11;
@@ -297,7 +326,7 @@ namespace FamilyReadParameter
 			// 
 			this.selectFamiliesBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.selectFamiliesBtn.Image = global::FamilyReadParameter.Properties.Resources.loadFamilies40x40;
-			this.selectFamiliesBtn.Location = new System.Drawing.Point(17, 49);
+			this.selectFamiliesBtn.Location = new System.Drawing.Point(17, 51);
 			this.selectFamiliesBtn.Name = "selectFamiliesBtn";
 			this.selectFamiliesBtn.Size = new System.Drawing.Size(50, 50);
 			this.selectFamiliesBtn.TabIndex = 1;
@@ -340,26 +369,6 @@ namespace FamilyReadParameter
 			this.pictureBox1.TabIndex = 2;
 			this.pictureBox1.TabStop = false;
 			// 
-			// paramName
-			// 
-			this.paramName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.paramName.DefaultCellStyle = dataGridViewCellStyle1;
-			this.paramName.HeaderText = "Parameter Name";
-			this.paramName.Name = "paramName";
-			this.paramName.ReadOnly = true;
-			this.paramName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
-			// paramValue
-			// 
-			this.paramValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-			dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.paramValue.DefaultCellStyle = dataGridViewCellStyle2;
-			this.paramValue.HeaderText = "Parameter Value";
-			this.paramValue.Name = "paramValue";
-			this.paramValue.ReadOnly = true;
-			this.paramValue.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-			// 
 			// AddinForm
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -370,7 +379,7 @@ namespace FamilyReadParameter
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MinimumSize = new System.Drawing.Size(600, 600);
 			this.Name = "AddinForm";
-			this.Text = "Export family parameters";
+			this.Text = "Family read parameter";
 			this.panel1.ResumeLayout(false);
 			this.infoGroupBox.ResumeLayout(false);
 			this.infoGroupBox.PerformLayout();

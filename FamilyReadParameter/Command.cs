@@ -27,6 +27,7 @@ namespace FamilyReadParameter
 				_externalEvent = ExternalEvent.Create(_handler);
 			}
 
+
 			AddinForm addinForm = new AddinForm(commandData.Application, _handler);
 			addinForm.Show();
 
